@@ -3,8 +3,8 @@ var bodyParser = require('body-parser');
 
 
 var {mongoose} = require('./db/mongoose.js');
-var {Todo} = require('./db/models/todo.js');
-var {User} = require('./db/models/user.js');
+var {Todo} = require('./models/todo.js');
+var {User} = require('./models/user.js');
 
 
 var app = express();
@@ -28,6 +28,10 @@ app.post('/todos', (req, res) => {
 app.listen(3000, () => {
     console.log('Started on port 3000')
 });
+
+module.exports = {
+    app
+};
 
 // var newTodo = new Todo({
 //     text: 'Go shopping',
