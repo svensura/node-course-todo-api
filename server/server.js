@@ -1,3 +1,7 @@
+require('./config/config');
+
+
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -12,7 +16,7 @@ var {User} = require('./models/user.js');
 var app = express();
 
 // Port set for HEROKU deployment or local testing
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
