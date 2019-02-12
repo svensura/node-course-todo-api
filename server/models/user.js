@@ -42,7 +42,7 @@ UserSchema.methods.toJSON = function () {
 
     return _.pick(userObject, ['_id', 'email']);
 };
-// methods for single object - instance method
+// methods for single object - instance methods
 
 UserSchema.methods.generateAuthToken = function () {
     var user = this;
@@ -56,7 +56,15 @@ UserSchema.methods.generateAuthToken = function () {
     });
 };
 
-// methods for the class of this Object - model method
+UserSchema.methods.removeToken = function (token) {
+    var user = this;
+    return user.updateOne({
+        $pull: {
+            tokens: {token}
+        }
+    })
+};
+// methods for the class of this Object - model methods
 
 UserSchema.statics.findByToken = function (token) {
     var User = this;
