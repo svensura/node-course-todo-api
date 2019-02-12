@@ -42,7 +42,7 @@ UserSchema.methods.toJSON = function () {
 
     return _.pick(userObject, ['_id', 'email']);
 };
-// method for single object - instance
+// methods for single object - instance method
 
 UserSchema.methods.generateAuthToken = function () {
     var user = this;
@@ -56,10 +56,44 @@ UserSchema.methods.generateAuthToken = function () {
     });
 };
 
-// method for the class of this Object
+// methods for the class of this Object - model method
+
 UserSchema.statics.findByToken = function (token) {
-    var user = this;
+    var User = this;
     var decoded;
+
+    try {
+        decoded = jwt.verify(token, 'abc123');
+    } catch (e) {
+        // return new Promise((resolve, reject) => {
+        //     reject();
+        // });
+        return Promise.reject();
+    }
+
+    return User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
+    })
+};
+
+UserSchema.statics.findByCredentials = function (email, password) {
+    var User = this;
+    return User.findOne({email}).then ((user) => {
+        if (!user) {
+            return Promise.reject();
+        }
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, res) => {
+                if (res) {
+                    resolve(user);
+                } else {
+                    reject();
+                }
+            });
+        })
+    })
 
     try {
         decoded = jwt.verify(token, 'abc123');
